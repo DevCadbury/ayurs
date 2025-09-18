@@ -8,7 +8,7 @@ export async function exchangeUidForJwt(
   }
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(`${apiBase}/api/auth/exchange`, {
@@ -48,7 +48,7 @@ export async function selectUserRole(
   extras?: { email?: string | null; name?: string | null }
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(`${apiBase}/api/auth/select-role`, {
@@ -88,7 +88,7 @@ export async function selectUserRole(
 
 export async function checkUserExists(uid: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(`${apiBase}/api/auth/check-user`, {
@@ -122,7 +122,12 @@ function getAuthHeader(
   token?: string | null,
   uidFallback?: string | null
 ): Record<string, string> {
-  // For demo mode, always use the UID fallback or a demo UID
+  // Prioritize the token parameter if provided
+  if (token && token !== "demo-token") {
+    return { Authorization: `Bearer ${token}` };
+  }
+
+  // For demo mode, use the UID fallback or a demo UID
   if (uidFallback) {
     return { Authorization: `Bearer ${uidFallback}` };
   }
@@ -150,9 +155,9 @@ export async function getPatientAppointments(
   token?: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
-  // For demo mode, use the patientId as the token
+  // Use the token directly, with patientId as fallback for demo mode
   const authHeaders = getAuthHeader(token, patientId);
   console.log("Auth headers for appointments:", authHeaders);
 
@@ -217,7 +222,7 @@ export async function createAppointment(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(`${apiBase}/api/schedule`, {
@@ -250,7 +255,7 @@ export async function updateAppointmentStatus(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(`${apiBase}/api/schedule/${appointmentId}/status`, {
@@ -279,7 +284,7 @@ export async function updateAppointmentStatus(
 
 export async function getAllAppointments(token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(`${apiBase}/api/schedule`, {
@@ -331,7 +336,7 @@ export async function getAllAppointments(token: string) {
 
 export async function getMemberSessions(memberId: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(`${apiBase}/api/schedule/member/${memberId}`, {
@@ -392,7 +397,7 @@ export async function updateAppointment(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/schedule/${id}`, {
     method: "PATCH",
     headers: {
@@ -408,7 +413,7 @@ export async function updateAppointment(
 
 export async function deleteAppointment(id: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/schedule/${id}`, {
     method: "DELETE",
     headers: {
@@ -427,7 +432,7 @@ export async function getAvailableTimeSlots(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(
@@ -456,7 +461,7 @@ export async function getAvailableTimeSlots(
 // Users API functions
 export async function getDoctors(token?: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   const authHeaders = getAuthHeader(token, null);
   console.log("Auth headers for doctors:", authHeaders);
@@ -509,7 +514,7 @@ export async function getDoctors(token?: string) {
 // Admin: list users (optional role and search)
 export async function listUsers(token: string, role?: string, query?: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const url = new URL(`${apiBase}/api/users`);
   if (role) url.searchParams.set("role", role);
   if (query) url.searchParams.set("query", query);
@@ -563,7 +568,7 @@ export async function createUserAdmin(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/users`, {
     method: "POST",
     headers: {
@@ -588,7 +593,7 @@ export async function updateUserAdmin(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/users/${id}`, {
     method: "PUT",
     headers: {
@@ -604,7 +609,7 @@ export async function updateUserAdmin(
 
 export async function deleteUserAdmin(id: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/users/${id}`, {
     method: "DELETE",
     headers: {
@@ -619,7 +624,7 @@ export async function deleteUserAdmin(id: string, token: string) {
 
 export async function getCurrentUser(token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(`${apiBase}/api/users/me`, {
@@ -682,7 +687,7 @@ export async function updateCurrentUser(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/users/me`, {
     method: "PUT",
     headers: {
@@ -698,7 +703,7 @@ export async function updateCurrentUser(
 
 export async function approveUser(id: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/users/${id}/approve`, {
     method: "PATCH",
     headers: {
@@ -717,7 +722,7 @@ export async function searchDoctors(
   uidFallback?: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const url = new URL(`${apiBase}/api/users`);
@@ -765,7 +770,7 @@ export async function getDoctorById(
   uidFallback?: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
@@ -796,7 +801,7 @@ export async function getDoctorReviews(
   uidFallback?: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
@@ -824,7 +829,7 @@ export async function getDoctorReviews(
 // Therapies API functions
 export async function getTherapies(token?: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   const authHeaders = getAuthHeader(token, null);
   console.log("Auth headers for therapies:", authHeaders);
@@ -891,7 +896,7 @@ export async function createTherapy(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/therapies`, {
     method: "POST",
     headers: {
@@ -921,7 +926,7 @@ export async function updateTherapy(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/therapies/${id}`, {
     method: "PUT",
     headers: {
@@ -938,7 +943,7 @@ export async function updateTherapy(
 // Admin: Delete therapy
 export async function deleteTherapy(id: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(`${apiBase}/api/therapies/${id}`, {
     method: "DELETE",
     headers: {
@@ -954,7 +959,7 @@ export async function deleteTherapy(id: string, token: string) {
 // Progress API functions
 export async function getPatientProgress(patientId: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(`${apiBase}/api/progress/patient/${patientId}`, {
@@ -994,7 +999,7 @@ export async function updateSessionFeedback(
   uidFallback?: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(
@@ -1025,7 +1030,7 @@ export async function updateSessionFeedback(
 
 export async function getPatientGoals(patientId: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(
@@ -1055,7 +1060,7 @@ export async function getPatientGoals(patientId: string, token: string) {
 
 export async function getPatientAchievements(patientId: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(
@@ -1088,7 +1093,7 @@ export async function getPatientNotifications(
   token: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   try {
     const res = await fetch(
@@ -1122,9 +1127,9 @@ export async function getPatientNotifications(
 // Messages API
 export async function listMessageThreads(patientId: string, token?: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
-  const authHeaders = getAuthHeader(token, patientId);
+  const authHeaders = getAuthHeader(token, null);
   console.log("Auth headers for message threads:", authHeaders);
 
   try {
@@ -1182,7 +1187,7 @@ export async function listChatMessages(
   uidFallback?: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
   const authHeaders = getAuthHeader(token, uidFallback);
   console.log("Auth headers for chat messages:", authHeaders);
@@ -1254,9 +1259,9 @@ export async function sendChatMessage(
   token?: string
 ) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
 
-  const authHeaders = getAuthHeader(token, data.senderId);
+  const authHeaders = getAuthHeader(token, null);
   console.log("Auth headers for sending message:", authHeaders);
 
   try {
@@ -1336,7 +1341,7 @@ export async function sendChatMessage(
 // Doctor-Admin thread for a given doctor (uid or id)
 export async function getDoctorAdminThread(doctorId: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(
     `${apiBase}/api/messages/threads/doctor-admin/${doctorId}`,
     {
@@ -1353,7 +1358,7 @@ export async function getDoctorAdminThread(doctorId: string, token: string) {
 
 export async function listDoctorThreads(doctorId: string, token: string) {
   const apiBase =
-    process.env.NEXT_PUBLIC_API_BASE || "https://ayur-api.vercel.app";
+    process.env.NEXT_PUBLIC_API_BASE || "https://ayurs-care-api.vercel.app";
   const res = await fetch(
     `${apiBase}/api/messages/threads/doctor/${doctorId}`,
     {

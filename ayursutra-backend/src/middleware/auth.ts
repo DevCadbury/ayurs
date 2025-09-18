@@ -45,7 +45,7 @@ export function signAppJwt(uid: string, role: string) {
   return jwt.sign({ uid, role }, secret, { expiresIn: "7d" });
 }
 
-export function verifyAppJwt(
+export async function verifyAppJwt(
   req: AuthRequest,
   res: Response,
   next: NextFunction
@@ -58,6 +58,20 @@ export function verifyAppJwt(
 
     if (!token) {
       return res.status(401).json({ message: "Invalid token format" });
+    }
+
+    // If Firebase Admin is configured, try to verify as Firebase ID token first
+    if (isFirebaseAdminConfigured()) {
+      try {
+        // Try to verify as Firebase ID token
+        const decoded = await adminAuth.verifyIdToken(token);
+        req.user = { uid: decoded.uid, role: "patient" }; // Default role, will be updated by user lookup
+        console.log("Firebase ID token verified - assigned user:", req.user);
+        return next();
+      } catch (firebaseError) {
+        console.log("Not a Firebase ID token, trying as custom JWT:", firebaseError instanceof Error ? firebaseError.message : String(firebaseError));
+        // Fall through to custom JWT verification
+      }
     }
 
     // Check if Firebase Admin is not configured - use demo mode
@@ -89,6 +103,7 @@ export function verifyAppJwt(
       }
     }
 
+    // Try to verify as custom JWT token
     const secret =
       process.env.JWT_SECRET || "ayursutra-super-secret-jwt-key-2024";
     const payload = jwt.verify(token, secret) as any;
