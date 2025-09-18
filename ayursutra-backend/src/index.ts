@@ -22,9 +22,9 @@ export function createApp() {
     ...(process.env.NEXT_PUBLIC_APP_ORIGIN
       ? [process.env.NEXT_PUBLIC_APP_ORIGIN]
       : []),
-    // Production frontend (hyphen version is valid on Vercel; underscore kept just in case it's used somewhere internally)
-    "https://ayursutra-panchakarma.vercel.app",
-    "https://ayursutra_panchakarma.vercel.app",
+    // Production frontend URLs
+
+    "https://ayursutra-care.vercel.app",
     // Local development
     "http://localhost:3000",
     "http://127.0.0.1:3000",
