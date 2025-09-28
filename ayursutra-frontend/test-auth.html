@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth Store Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .success {
+        color: #28a745;
+        font-weight: bold;
+      }
+      .error {
+        color: #dc3545;
+        font-weight: bold;
+      }
+      pre {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>AyurSutra Auth Store Test</h1>
+      <p>
+        This page helps you set up the auth store for testing the frontend
+        application.
+      </p>
+
+      <h2>Test UID: 3oOF4bGdZLcUN7UuwBogMLNYTLm2</h2>
+
+      <button onclick="setAuthStore()">Set Auth Store</button>
+      <button onclick="checkAuthStore()">Check Auth Store</button>
+      <button onclick="clearAuthStore()">Clear Auth Store</button>
+      <button onclick="testAPI()">Test API Call</button>
+
+      <div id="output"></div>
+
+      <h3>Instructions:</h3>
+      <ol>
+        <li>Click "Set Auth Store" to configure the demo user</li>
+        <li>Click "Test API Call" to verify the backend connection</li>
+        <li>Go back to your main application and refresh the page</li>
+        <li>The 500 errors should now be resolved!</li>
+      </ol>
+    </div>
+
+    <script>
+      const testUID = "3oOF4bGdZLcUN7UuwBogMLNYTLm2";
+      const apiBase = "https://ayur-api.vercel.app";
+
+      function setAuthStore() {
+        const authData = {
+          uid: testUID,
+          role: "patient",
+          displayName: "Test Patient",
+          email: "test@example.com",
+          token: "demo-token",
+        };
+
+        localStorage.setItem(
+          "auth-storage",
+          JSON.stringify({
+            state: authData,
+            version: 0,
+          })
+        );
+
+        showOutput("✅ Auth store set successfully!", "success");
+        showOutput(
+          "Auth data: " + JSON.stringify(authData, null, 2),
+          "success"
+        );
+      }
+
+      function checkAuthStore() {
+        try {
+          const stored = localStorage.getItem("auth-storage");
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            showOutput("✅ Auth store found:", "success");
+            showOutput(JSON.stringify(parsed, null, 2), "success");
+          } else {
+            showOutput("❌ No auth store found", "error");
+          }
+        } catch (e) {
+          showOutput("❌ Error reading auth store: " + e.message, "error");
+        }
+      }
+
+      function clearAuthStore() {
+        localStorage.removeItem("auth-storage");
+        showOutput("✅ Auth store cleared", "success");
+      }
+
+      async function testAPI() {
+        showOutput("🔄 Testing API call...", "");
+
+        try {
+          const response = await fetch(
+            `${apiBase}/api/schedule/patient/${testUID}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${testUID}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            showOutput("✅ API call successful!", "success");
+            showOutput("Response: " + JSON.stringify(data, null, 2), "success");
+          } else {
+            showOutput(
+              `❌ API call failed: ${response.status} ${response.statusText}`,
+              "error"
+            );
+          }
+        } catch (error) {
+          showOutput("❌ API call error: " + error.message, "error");
+        }
+      }
+
+      function showOutput(message, type = "") {
+        const output = document.getElementById("output");
+        const div = document.createElement("div");
+        div.className = type;
+        div.innerHTML = message;
+        output.appendChild(div);
+      }
+
+      // Auto-check auth store on page load
+      window.onload = function () {
+        checkAuthStore();
+      };
+    </script>
+  </body>
+</html>

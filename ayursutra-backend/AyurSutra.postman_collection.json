@@ -1,0 +1,67 @@
+{
+  "info": {
+    "name": "AyurSutra API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth Exchange UID → JWT",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{FIREBASE_ID_TOKEN}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{BASE_URL}}/api/auth/exchange",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "auth", "exchange"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"uid\": \"{{FIREBASE_UID}}\",\n  \"email\": \"user@example.com\",\n  \"name\": \"User\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Users List",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{APP_JWT}}" }],
+        "url": {
+          "raw": "{{BASE_URL}}/api/users",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "users"]
+        }
+      }
+    },
+    {
+      "name": "Create Appointment",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{APP_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{BASE_URL}}/api/schedule",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "schedule"]
+        },
+        "body": { "mode": "raw", "raw": "{}" }
+      }
+    },
+    {
+      "name": "Feedback List",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{APP_JWT}}" }],
+        "url": {
+          "raw": "{{BASE_URL}}/api/feedback",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "feedback"]
+        }
+      }
+    }
+  ]
+}
