@@ -53,9 +53,6 @@ async function performConnection(): Promise<typeof mongoose.connection> {
       maxIdleTimeMS: 10000, // Close connection after 10s of inactivity
       connectTimeoutMS: 15000, // Increased connection timeout
       heartbeatFrequencyMS: 10000, // Check connection health every 10s
-      // Additional options for Atlas sleep mode
-      serverSelectionRetryDelayMS: 2000,
-      maxServerSelectionRetries: 3,
     };
 
     await mongoose.connect(mongoUri, options);

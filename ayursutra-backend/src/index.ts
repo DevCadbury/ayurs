@@ -166,16 +166,16 @@ export function createApp() {
       .connect(resolvedMongoUri, {
         // Serverless-optimized connection options
         maxPoolSize: 1, // Single connection for serverless
-        serverSelectionTimeoutMS: 10000, // Increased timeout
-        socketTimeoutMS: 45000,
+        serverSelectionTimeoutMS: 15000, // Increased timeout for cold starts
+        socketTimeoutMS: 60000, // Increased socket timeout
         bufferCommands: false,
         retryWrites: true,
         w: "majority",
         directConnection: false,
         retryReads: true,
-        maxIdleTimeMS: 30000,
-        connectTimeoutMS: 10000,
-        heartbeatFrequencyMS: 10000,
+        maxIdleTimeMS: 10000, // Close connection after 10s of inactivity
+        connectTimeoutMS: 15000, // Increased connection timeout
+        heartbeatFrequencyMS: 10000, // Check connection health every 10s
       })
       .then(() => {
         console.log("✅ MongoDB connection established");

@@ -32,8 +32,6 @@ async function testConnection() {
       maxIdleTimeMS: 10000,
       connectTimeoutMS: 15000,
       heartbeatFrequencyMS: 10000,
-      serverSelectionRetryDelayMS: 2000,
-      maxServerSelectionRetries: 3,
     });
 
     console.log("✅ Initial connection successful");
@@ -71,8 +69,6 @@ async function testConnection() {
       maxIdleTimeMS: 10000,
       connectTimeoutMS: 15000,
       heartbeatFrequencyMS: 10000,
-      serverSelectionRetryDelayMS: 2000,
-      maxServerSelectionRetries: 3,
     });
 
     console.log("✅ Reconnection successful");
